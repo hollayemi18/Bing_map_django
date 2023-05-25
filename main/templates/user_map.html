@@ -1,0 +1,64 @@
+<!-- map.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<script type='text/javascript'>
+    let latitude = '{{latitude}}'
+    let longitude = '{{longitude}}'
+    let your_latitude = '{{your_latitude}}'
+    let your_longitude = '{{your_longitude}}'
+    function loadMapScenario() {
+
+
+        var map = new Microsoft.Maps.Map(document.getElementById('mapContainer'), {
+            credentials: 'ArZBopFItKhshmS1NYR0zxOJ6KO5FztB-CbghO18Dfg_lhwhcdALbaieuliaynrM',
+            center: new Microsoft.Maps.Location(your_latitude, your_longitude),
+            zoom: 12
+        });
+
+
+        var yourLocation = new Microsoft.Maps.Location(your_latitude, your_longitude);
+        var clientLocation = new Microsoft.Maps.Location(latitude, longitude);
+
+        var yourPin = new Microsoft.Maps.Pushpin(yourLocation, null);
+        var clientPin = new Microsoft.Maps.Pushpin(clientLocation, null);
+
+        map.entities.push(yourPin);
+        map.entities.push(clientPin);
+
+        var lineCoordinates = [
+            yourLocation,
+            clientLocation
+        ];
+
+        var line = new Microsoft.Maps.Polyline(lineCoordinates, {
+            strokeColor: 'red',
+            strokeThickness: 2
+        });
+
+        map.entities.push(line);
+        var map;
+        var searchManager;
+        Microsoft.Maps.loadModule('Microsoft.Maps.Search', function () {
+            searchManager = new Microsoft.Maps.Search.SearchManager(map);
+            var searchBox = new Microsoft.Maps.Search.SearchBox(document.getElementById('addressBox'), { map: map });
+            addressBox.addListener('search', function (e) {
+                searchManager.geocode({
+                    where: e.searchBox.getValue(),
+                    callback: function (r) {
+                        map.setView({ bounds: r.results[0].bestView });
+                        var pushpin = new Microsoft.Maps.Pushpin(r.results[0].location);
+
+                    }
+                });
+            });
+        });
+    }
+</script>
+
+<body onload="loadMapScenario();"></body>
+<div id="mapContainer" style="width: 100%; height: 100%;"></div>
+<div id="addressBox"></div>
+
+{% endblock %}

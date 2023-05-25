@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Record</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Employee ID</th>
+                <th>Employee Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for users in storedata %}
+            <tr>
+
+                <td>{{ users.id }}</td>
+
+                <td>
+                    <a href="{% url 'map' id=users.id %}"><button>Generate Map</button></a>
+                </td>
+                {% endfor %}
+
+            </tr>
+
+
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <button><a style="color:white;" href="/emp">Add New Record</a></button>
+</body>
+
+</html>
